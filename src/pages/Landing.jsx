@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { fetchProductThunk } from "../Redux/Slices/productSlice";
+import { fetchProductThunk ,prevPage,nextPage} from "../Redux/Slices/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../Redux/Slices/wishlistSlice";
 import { addToCart } from "../Redux/Slices/cartSlice";
@@ -8,13 +8,30 @@ import { addToCart } from "../Redux/Slices/cartSlice";
 function Landing() {
   const dispatch = useDispatch();
   
-  const { products, pending, error } = useSelector(
+  const { products, pending, error ,currentPage} = useSelector(
     (state) => state.productReducer,
   );
+
+  const productsPerPage=10;
+  const totalPages=(products?.length)/productsPerPage
 
   useEffect(() => {
     dispatch(fetchProductThunk());
   }, []);
+
+  const nextPageNavigate=()=>{
+    if(currentPage<totalPages){
+      dispatch(nextPage())
+    }
+  }
+  const prevPageNavigate=()=>{
+    if(currentPage>1){
+      dispatch(prevPage())
+    }
+  }
+
+  const endIndex=(currentPage*productsPerPage)
+  const startIndex=(endIndex-productsPerPage)
   return (
     <>
       {/* Hero Section */}
@@ -42,7 +59,7 @@ function Landing() {
                 <h2 className="text-center text-danger">{error}</h2>
               ) : (
                 <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center ">
-                  {products.map((item) => (
+                  {products.slice(startIndex,endIndex).map((item) => (
                     <div className="col mb-5">
                       <div className="card h-100">
                         <Link to={`/details/${item.id}`}>
@@ -84,11 +101,11 @@ function Landing() {
       </section>
       <div className="my-3 d-flex justify-content-center">
         <div className="d-flex gap-3 align-items-center">
-          <button className="btn">
+          <button className="btn" onClick={prevPageNavigate}>
             <i className="fa-solid fa-angles-left"></i>
           </button>
-          <span>1/10</span>
-          <button className="btn">
+          <span>{currentPage}/{totalPages}</span>
+          <button className="btn"onClick={nextPageNavigate}>
             <i className="fa-solid fa-angles-right"></i>
           </button>
         </div>

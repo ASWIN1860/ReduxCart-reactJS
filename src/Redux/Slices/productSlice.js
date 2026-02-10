@@ -14,7 +14,8 @@ const productSlice=createSlice({
         products:[],
         allProducts:[],
         pending:false,
-        error:""
+        error:"",
+        currentPage:1
     },
     reducers:{
 
@@ -25,6 +26,12 @@ const productSlice=createSlice({
             else{
                 state.products=state.allProducts
             }
+        },
+        nextPage:(state)=>{
+            state.currentPage++
+        },
+        prevPage:(state)=>{
+            state.currentPage--
         }
     },
 
@@ -53,4 +60,4 @@ const productSlice=createSlice({
 })
 
 export default productSlice.reducer;
-export const {searchProducts}=productSlice.actions
+export const {searchProducts,prevPage,nextPage}=productSlice.actions
