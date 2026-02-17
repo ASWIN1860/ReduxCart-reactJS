@@ -19,7 +19,7 @@ const productSlice=createSlice({
     },
     reducers:{
 
-        searchProducts:(state,payload)=>{
+        searchProducts:(state,payload)=>{  
             if(payload.payload !=""){
                  state.products=state.allProducts.filter(item=>item.title.toLowerCase().includes(payload.payload.toLowerCase()))
             }
